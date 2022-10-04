@@ -42,13 +42,7 @@ public class SATsolvers {
         double GSATEndTime = System.nanoTime();
         System.out.println("GSAT: "+testGSAT + " runtime (s): " + (GSATEndTime-GSATStartTime)/1000000000);
         
-        //DPLL is taking too long to run & I think it is broken
-        // double DPLLStartTime = System.nanoTime();
-        // int testDPLL = DPLLsetup(clauses, numVars);
-        // double DPLLEndTime = System.nanoTime();
-        // System.out.println("completely satisfied 1/0 yes/no " + testDPLL 
-        // + " out of clauses size of " + clauses.size() 
-        // + " runtime (s): " + (DPLLEndTime - DPLLStartTime) /1000000000);
+       
 
 
         
@@ -120,97 +114,7 @@ public class SATsolvers {
 
     }
 
-    public static int DPLLsetup(ArrayList<Integer[]> clauses, int number_of_variables){
-        //call each branch on the tree:
-        int num_clauses_satisfied = 0;
-       
-        boolean billy = DPLLrecursion(clauses, 1, true, number_of_variables);
-        boolean is_satisfiable = DPLLrecursion(clauses, 1, false, number_of_variables);
-
-        
-
-        if(is_satisfiable || billy){
-            //able to satisfy all clauses
-            return clauses.size();
-        }else{
-            //not able to satisfy all clauses
-            return 0;
-        }
-    }
-
-    public static boolean DPLLrecursion(ArrayList<Integer[]> clauses, int j, boolean assignment, int number_of_vars){
-        ArrayList<Integer[]> newFormula = new ArrayList<Integer[]>();
-        for (int i = 0; i < clauses.size(); i++) {
-            newFormula.add(clauses.get(i));
-        }
-        //System.out.println("newformula size after copy: " + newFormula.size());
-
-        if(newFormula.size() == 0){
-            return true;
-        }
-        //if we have gone too deep down the recursion rabbit hole, get us out
-        if(j > number_of_vars){
-            return false;
-        }
-
-        
-        for (int i = 0; i < newFormula.size(); i++) {
-            for (int k = 0; k < 3; k++) {
-                if(newFormula.get(i)[k] == j){
-                    if(assignment){
-                        //create new formula, without the clause that we know can be satisfied
-                        //now we have this newFormula.
-                        //System.out.println("hello");
-                        newFormula.remove(i);
-                        break;
-                       //System.out.println("newFormula size after removing ith element: " + newFormula.size());
-                    }else{
-                        //if false, replace that with a zero
-                        //System.out.println("hell02");
-                        newFormula.get(i)[k] = 0;
-                        
-                    }
-                }
-                
-                
-            }
-        }
-
-        for (int i = 0; i < newFormula.size(); i++) {
-            int numberOfZeros = 0;
-            for (int k = 0; k < 3; k++) {
-
-                if(newFormula.get(i)[k] == 0){
-                    numberOfZeros++;
-                }
-            }
-
-            if(numberOfZeros > 2){
-                return false;
-            }
-        }
-        //System.out.println("new formula size right before recursion: " + newFormula.size());
-        boolean billy = DPLLrecursion(newFormula, j + 1, true, number_of_vars);
-        
-        boolean is_satisfiable = DPLLrecursion(newFormula, j + 1, false, number_of_vars);
-
-        
-
-        if(is_satisfiable || billy){
-            //able to satisfy all clauses
-            return true;
-        }else{
-            //not able to satisfy all clauses
-            return false;
-        }
-
-    }
-
-
-
-
-
-
+   
     public static int countSatisfiedClauses(ArrayList<Integer[]> clauses, boolean[] truthAssignment){
         int numSatisfied = 0;
         for (int i = 0; i < clauses.size(); i++) {
